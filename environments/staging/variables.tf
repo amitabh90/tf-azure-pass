@@ -53,12 +53,21 @@ variable "storage_account_name" {
   description = "The name of the storage account to be created."
   type        = string
 }
-variable "php_app_service_plan_name" {
+variable "drupal_app_service_plan_name" {
   description = "The name of the App Service Plan"
   type        = string
 }
 
-variable "php_web_app_name" {
-  description = "The name of the Web App"
+variable "drupal_app_name" {
+  description = "The name of the Drupal App Service"
+  type        = string
+}
+variable "node_app_service_plan_name" {
+  description = "The name of the App Service Plan"
+  type        = string
+}
+
+variable "node_app_name" {
+  description = "The name of the Drupal App Service"
   type        = string
 }

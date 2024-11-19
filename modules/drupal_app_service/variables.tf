@@ -1,4 +1,4 @@
-variable "node_app_service_plan_name" {
+variable "drupal_app_service_plan_name" {
   description = "The name of the App Service Plan"
   type        = string
 }
@@ -13,13 +13,24 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "node_app_name" {
-  description = "The name of the Node.js App Service"
+variable "drupal_app_name" {
+  description = "The name of the Drupal App Service"
   type        = string
 }
 
-variable "node_env" {
-  description = "Environment variable for Node.js (e.g., production, staging)"
+variable "php_version" {
+  description = "The PHP version to use for the App Service"
+  type        = string
+  default     = "PHP|8.1"
+}
+
+variable "database_url" {
+  description = "The database connection URL for the Drupal app"
+  type        = string
+}
+
+variable "drupal_env" {
+  description = "Environment variable for Drupal (e.g., production, staging)"
   type        = string
   default     = "production"
 }
@@ -53,10 +64,5 @@ variable "subnet_id" {
 
 variable "virtual_network_id" {
   description = "The ID of the virtual network linked to the private DNS zone"
-  type        = string
-}
-
-variable "dns_zone_name" {
-  description = "The name of the private DNS zone"
   type        = string
 }
