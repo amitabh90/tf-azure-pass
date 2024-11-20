@@ -86,3 +86,17 @@ variable "mysql_version" {
   type        = string
   default     = "8.0.21"
   }
+variable "redis_name" {
+  description = "The name of the Redis Cache instance."
+  type        = string
+}
+
+variable "frontdoor_name" {
+  description = "The name of the Front Door instance."
+  type        = string
+}
+
+variable "front_door_sku_name" {
+  description = "The SKU name for the Front Door."
+  type        = string
+}

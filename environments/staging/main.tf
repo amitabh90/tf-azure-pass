@@ -78,3 +78,29 @@ module "db_mysql" {
   private_endpoint_name = "mysql-private-endpoint"
   tags = var.tags
 }
+
+module "redis" {
+  source              = "../../modules/db_redis"
+  name                = var.redis_name
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  capacity             = 2
+  family               = "C"
+  sku_name             = "Standard"
+  enable_non_ssl_port = false
+  virtual_network_id  = module.vnet.vnet_id
+  subnet_id           = module.vnet.subnet_ids[2]
+  tags = var.tags
+}
+
+module "frontdoor" {
+  source              = "../../modules/lb_frontdoor"
+  name                = var.frontdoor_name
+  resource_group_name = var.resource_group_name
+  location = var.location
+  virtual_network_id  = module.vnet.vnet_id
+  subnet_id           = module.vnet.subnet_ids[0]
+  app_service_hostname = module.node_app_service.node_app_url
+  front_door_sku_name = var.front_door_sku_name
+}
+
