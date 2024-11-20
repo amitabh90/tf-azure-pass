@@ -32,3 +32,7 @@ variable "front_door_sku_name" {
   description = "The SKU name for the Front Door."
   type        = string
 }
+variable "app_service_id" {
+  description = "The ID of the App Service."
+  type        = string
+}

@@ -54,6 +54,11 @@ resource "azurerm_cdn_frontdoor_origin" "site_app_service_origin" {
   priority                       = 1
   weight                         = 1000
   certificate_name_check_enabled = true
+  private_link {
+    private_link_target_id = var.app_service_id
+    location = var.location
+  }
+
 }
 
 resource "azurerm_cdn_frontdoor_route" "site_route" {

@@ -14,6 +14,7 @@ module "vnet" {
   dns_servers = var.dns_servers
   tags = var.tags
   subnets = var.subnets
+  depends_on = [ module.rg ]
 }
 
 module "storage_account" {
@@ -26,6 +27,7 @@ module "storage_account" {
   tags                    = var.tags
   subnet_id               = module.vnet.subnet_ids[5]
   virtual_network_id      = module.vnet.vnet_id
+  depends_on = [ module.vnet, module.rg ]
 }
 
 module "drupal_app_service" {
@@ -43,11 +45,14 @@ module "drupal_app_service" {
   subnet_id               = module.vnet.subnet_ids[1]
   virtual_network_id      = module.vnet.vnet_id
   private_endpoint_name = "drupal-private-endpoint"
+  depends_on = [ module.rg, module.vnet, module.storage_account ]
 }
 
 data "azurerm_private_dns_zone" "existing_dns_zone" {
   name                = "privatelink.azurewebsites.net"  # Existing DNS zone name
   resource_group_name = var.resource_group_name         # Resource group containing the DNS zone
+
+  depends_on = [ module.drupal_app_service ]
 }
 module "node_app_service" {
   source                  = "../../modules/node_app_service"
@@ -63,6 +68,7 @@ module "node_app_service" {
   virtual_network_id      = module.vnet.vnet_id
   private_endpoint_name = "node-private-endpoint"
   dns_zone_name = data.azurerm_private_dns_zone.existing_dns_zone.name
+  depends_on = [ module.rg, module.vnet, module.storage_account ]
 }
 
 module "db_mysql" {
@@ -77,6 +83,7 @@ module "db_mysql" {
   virtual_network_id  = module.vnet.vnet_id
   private_endpoint_name = "mysql-private-endpoint"
   tags = var.tags
+  depends_on = [ module.vnet, module.rg ]
 }
 
 module "redis" {
@@ -91,6 +98,7 @@ module "redis" {
   virtual_network_id  = module.vnet.vnet_id
   subnet_id           = module.vnet.subnet_ids[2]
   tags = var.tags
+  depends_on = [ module.vnet, module.rg ]
 }
 
 module "frontdoor" {
@@ -102,5 +110,22 @@ module "frontdoor" {
   subnet_id           = module.vnet.subnet_ids[0]
   app_service_hostname = module.node_app_service.node_app_url
   front_door_sku_name = var.front_door_sku_name
+  app_service_id      = module.node_app_service.node_app_service_id
+  depends_on = [ module.vnet, module.rg, module.node_app_service ]
+}
+
+module "vpn_gateway" {
+  source              = "../../modules/ps_vpn"
+  resource_group_name = var.resource_group_name
+  location = var.location
+  vpn_gateway_name    = "site-vpn-gateway"
+  vpn_gateway_ip_name = "vpn-public-ip"
+  vpn_connection_name = "my-vpn-connection"
+  local_network_gateway_name = "onprem-vpn-gateway"
+  onprem_public_ip     = "198.51.100.1"
+  onprem_address_space = ["192.168.0.0/16"]
+  shared_key           = "MySharedSecretKey"
+  subnet_id           = module.vnet.subnet_ids[6]
+  depends_on = [ module.vnet, module.rg ]
 }
 
