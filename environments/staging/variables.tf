@@ -71,3 +71,18 @@ variable "node_app_name" {
   description = "The name of the Drupal App Service"
   type        = string
 }
+variable "mysql_server_name" {
+  description = "Name of the MySQL Flexible Server"
+  type        = string
+}
+variable "sku_name" {
+  description = "SKU for the MySQL Flexible Server"
+  type        = string
+  default     = "Standard_B2ms"
+}
+
+variable "mysql_version" {
+  description = "MySQL version"
+  type        = string
+  default     = "8.0.21"
+  }

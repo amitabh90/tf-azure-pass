@@ -64,3 +64,17 @@ module "node_app_service" {
   private_endpoint_name = "node-private-endpoint"
   dns_zone_name = data.azurerm_private_dns_zone.existing_dns_zone.name
 }
+
+module "db_mysql" {
+  source = "../../modules/db_mysql"
+  mysql_server_name   = var.mysql_server_name
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  admin_username      = "mysqladmin"
+  admin_password      = "MyStrongPassword123!"
+  mysql_version       = var.mysql_version
+  subnet_id           = module.vnet.subnet_ids[2]
+  virtual_network_id  = module.vnet.vnet_id
+  private_endpoint_name = "mysql-private-endpoint"
+  tags = var.tags
+}
