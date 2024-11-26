@@ -57,6 +57,7 @@ resource "azurerm_cdn_frontdoor_origin" "site_app_service_origin" {
   private_link {
     private_link_target_id = var.app_service_id
     location = var.location
+    target_type = "sites"
   }
 
 }

@@ -25,11 +25,11 @@ variable "address_space" {
   type        = list(string)
 }
 
-variable "dns_servers" {
-  description = "The list of DNS servers for the Virtual Network"
-  type        = list(string)
-  default     = []
-}
+# variable "dns_servers" {
+#   description = "The list of DNS servers for the Virtual Network"
+#   type        = list(string)
+#   default     = []
+# }
 
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
@@ -100,3 +100,19 @@ variable "front_door_sku_name" {
   description = "The SKU name for the Front Door."
   type        = string
 }
+
+variable "bastion_name" {
+  description = "The name of the Bastion Host"
+  type        = string
+}
+
+variable "bastion_public_ip_name" {
+  description = "The name of the Public IP for the Bastion Host"
+  type        = string
+}
+
+# variable "bastion_dns_name" {
+#   description = "The DNS name for the Bastion Host"
+#   type        = string
+#   default     = null
+# }

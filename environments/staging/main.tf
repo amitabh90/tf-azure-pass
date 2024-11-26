@@ -11,7 +11,7 @@ module "vnet" {
   location = var.location
   vnet_name = var.vnet_name
   address_space = var.address_space
-  dns_servers = var.dns_servers
+  #dns_servers = var.dns_servers
   tags = var.tags
   subnets = var.subnets
   depends_on = [ module.rg ]
@@ -114,18 +114,29 @@ module "frontdoor" {
   depends_on = [ module.vnet, module.rg, module.node_app_service ]
 }
 
-module "vpn_gateway" {
-  source              = "../../modules/ps_vpn"
-  resource_group_name = var.resource_group_name
-  location = var.location
-  vpn_gateway_name    = "site-vpn-gateway"
-  vpn_gateway_ip_name = "vpn-public-ip"
-  vpn_connection_name = "my-vpn-connection"
-  local_network_gateway_name = "onprem-vpn-gateway"
-  onprem_public_ip     = "198.51.100.1"
-  onprem_address_space = ["192.168.0.0/16"]
-  shared_key           = "MySharedSecretKey"
-  subnet_id           = module.vnet.subnet_ids[6]
-  depends_on = [ module.vnet, module.rg ]
-}
+# module "vpn_gateway" {
+#   source              = "../../modules/ps_vpn"
+#   resource_group_name = var.resource_group_name
+#   location = var.location
+#   vpn_gateway_name    = "site-vpn-gateway"
+#   vpn_gateway_ip_name = "vpn-public-ip"
+#   vpn_connection_name = "my-vpn-connection"
+#   local_network_gateway_name = "onprem-vpn-gateway"
+#   onprem_public_ip     = "198.51.100.1"
+#   onprem_address_space = ["192.168.0.0/16"]
+#   shared_key           = "MySharedSecretKey"
+#   subnet_id           = module.vnet.subnet_ids[6]
+#   depends_on = [ module.vnet, module.rg ]
+# }
 
+
+module "bastion" {
+  source                 = "../../modules/azure_bastion"
+  resource_group_name    = var.resource_group_name
+  location               = var.location
+  subnet_id              = module.vnet.subnet_ids[3]
+  bastion_name           = var.bastion_name
+  bastion_public_ip_name = var.bastion_public_ip_name
+  #bastion_dns_name       = var.bastion_dns_name
+  depends_on = [ module.rg, module.vnet ]
+}
