@@ -19,11 +19,11 @@ variable "address_space" {
   type        = list(string)
 }
 
-variable "dns_servers" {
-  description = "The list of DNS servers for the Virtual Network"
-  type        = list(string)
-  default     = []
-}
+# variable "dns_servers" {
+#   description = "The list of DNS servers for the Virtual Network"
+#   type        = list(string)
+#   default     = []
+# }
 
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
